@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Preventivo Piano Base - JA AGRIFOOD AI</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/preventivo.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">JA AGRIFOOD AI</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="demo.html">Demo</a>
+        <a href="about.html">Chi Siamo</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="preventivo-section">
+    <div class="preventivo-container">
+      <h1>Preventivo - Piano Base</h1>
+      <p>Inserisci i tuoi dati per ricevere un preventivo per il Piano Base.</p>
+      
+      <!-- Form per il preventivo Piano Base -->
+      <form class="preventivo-form" action="https://formspree.io/f/mwpovlgd" method="POST">
+        <!-- Sostituisci 'mwpovlgd' con il codice del tuo form su Formspree -->
+        
+        <label for="nome">Nome e Cognome</label>
+        <input type="text" id="nome" name="nome" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="telefono">Numero di Telefono</label>
+        <input type="tel" id="telefono" name="telefono" pattern="[0-9+ ]{8,15}" placeholder="+39 123 456 7890" required />
+
+        <label for="azienda">Nome Azienda</label>
+        <input type="text" id="azienda" name="azienda" />
+
+        <p style="margin-top: 10px; font-weight: bold;">
+          Prezzo base: €2.430
+        </p>
+
+        <button type="submit" class="cta-button">Richiedi Preventivo</button>
+      </form>
+    </div>
+  </section>
+
+  <footer style="background-color: #222; color: #eee; padding: 30px; text-align: center;">
+    <div style="margin-bottom: 15px;">
+      <a href="about.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Contatti</a>
+      <a href="demo.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Demo</a>
+      <a href="privacy-policy.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Privacy Policy</a>
+    </div>
+    <div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" alt="Bandiera UE" width="35" style="vertical-align: middle; margin-right: 10px;">
+      <span style="font-size: 13px;">Progetto realizzato con il sostegno dell'Unione Europea</span>
+    </div>
+  </footer>
+</body>
+</html>

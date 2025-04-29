@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - JA AGRIFOOD AI</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">JA AGRIFOOD AI</a>
+            <button class="nav-toggle">☰</button>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="demo.html">Demo</a>
+                <a href="about.html">Chi Siamo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Section -->
+    <section class="demo" id="demo">
+        <div class="demo-header">
+            <h1>Demo Interattiva</h1>
+            <p class="demo-description">Prova il nostro sistema di riconoscimento AI in tempo reale</p>
+        </div>
+
+        <div class="demo-container">
+            <div class="demo-instructions">
+                <h3><i class="fas fa-info-circle"></i> Come Funziona</h3>
+                <ol>
+                    <li>Clicca su "Start" per attivare la fotocamera</li>
+                    <li>Mostra una mela alla webcam</li>
+                    <li>Il sistema analizzerà e classificherà in tempo reale</li>
+                </ol>
+            </div>
+
+            <div class="demo-interactive">
+                <div class="webcam-section">
+                    <button type="button" onclick="init()" class="start-button">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <div id="webcam-container"></div>
+                </div>
+                
+                <div class="results-section">
+                    <h3>Risultati Analisi</h3>
+                    <div id="label-container" class="prediction-results"></div>
+                </div>
+            </div>
+
+            <div class="demo-footer">
+                <p class="privacy-note">
+                    <i class="fas fa-shield-alt"></i> 
+                    I dati della webcam vengono elaborati localmente e non vengono salvati
+                </p>
+                <a href="index.html#pricing" class="cta-button-secondary">
+                    Scopri i Nostri Piani <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        const URL = "https://teachablemachine.withgoogle.com/models/yVsLuIBSy/";
+        let model, webcam, labelContainer, maxPredictions;
+
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            
+            const startButton = document.querySelector('.start-button');
+            startButton.disabled = true;
+            startButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Caricamento...';
+
+            try {
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+
+                const flip = true;
+                webcam = new tmImage.Webcam(400, 400, flip);
+                await webcam.setup();
+                await webcam.play();
+                window.requestAnimationFrame(loop);
+
+                document.getElementById("webcam-container").appendChild(webcam.canvas);
+                labelContainer = document.getElementById("label-container");
+                labelContainer.innerHTML = '';
+                for (let i = 0; i < maxPredictions; i++) {
+                    labelContainer.appendChild(document.createElement("div"));
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                startButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Errore';
+            }
+        }
+
+        async function loop() {
+            webcam.update();
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const prediction = await model.predict(webcam.canvas);
+            for (let i = 0; i < maxPredictions; i++) {
+                const percentage = (prediction[i].probability * 100).toFixed(1);
+                const classPrediction = `
+                    <div class="prediction-item">
+                        <span class="prediction-label">${prediction[i].className}</span>
+                        <div class="prediction-bar-container">
+                            <div class="prediction-bar" style="width: ${percentage}%"></div>
+                            <span class="prediction-percentage">${percentage}%</span>
+                        </div>
+                    </div>
+                `;
+                labelContainer.childNodes[i].innerHTML = classPrediction;
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer style="background-color: #222; color: #eee; padding: 30px; text-align: center; font-family: 'Segoe UI', sans-serif;">
+        <div style="margin-bottom: 15px;">
+          <a href="about.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Contatti</a>
+          <a href="demo.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Demo</a>
+          <a href="./privacy-policy.html" style="color: #eee; margin: 0 20px; text-decoration: none;">Privacy Policy</a>
+        </div>
+        <div>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" alt="Bandiera UE" width="35" style="vertical-align: middle; margin-right: 10px;">
+          <span style="font-size: 13px;">Progetto Realizzato con il Sostegno dell'Unione Europea</span>
+        </div>
+      </footer>
+      
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" title="Torna su">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
